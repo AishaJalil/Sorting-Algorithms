@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int arr[10]={10, 12, 20, 30, 25, 40, 31, 35, 50,60};
+	int j,k;
+	int min=arr[0], min_address, max=0,max_address;
+	bool flag=false, check=false;
+	
+	
+	cout<<"Whole array\n";
+	
+		for(int a=0; a<10;a++)
+		{
+			cout<<arr[a]<<"  ";
+		}
+		cout<<"\n\n";
+		
+		
+	
+	//finding minimum number of array and its address
+	for(int a=1; a<10; a++)
+	{
+		if(arr[a]<min)
+		{
+			min=arr[a];
+			min_address=a;
+		}
+	}
+	
+		//finding maximum number of array and its address
+	for(int a=1; a<10; a++)
+	{
+		if(arr[a]>max)
+		{
+			max=arr[a];
+			max_address=a;
+		}
+	}
+	if(min_address!=0 && max_address!=9)
+	{
+		cout<<"You have to sort whole array.\n";
+		for(int a=0; a<10;a++)
+		{
+			cout<<arr[a]<<"  ";
+		}
+		cout<<"\n\n";
+		
+	}
+	else
+	{
+		
+		//saving the last found index value of ‘j’ which will be less than max
+		for(int i=9; i>=0; i--)
+		{
+			if(arr[i]==max || arr[i]<max)
+			{
+				k=i;
+				max=arr[i];
+				
+				
+				for(int a=i; a>=0; a--)
+				{
+					if(arr[a]>max)
+					check=true;
+				}
+				
+			}
+			if(check==true)
+			{
+				break;
+			}
+		}
+	//	cout<<"k = "<<k;
+		
+		//saving the last found index value of ‘i’ which will be greater than max
+	    for(int i=0; i<10; i++)
+	    {
+	    	if(arr[i]>=min)
+	    	{
+	    		min=arr[i];
+	    		j=i;
+	    	
+	    		
+			}
+			else
+			{
+				break;
+			}
+		
+		}
+		//cout<<"J = "<<j;
+	
+	}
+	
+	//print unsorted subarray
+	cout<<"You have to sort this unsorted array\n";
+		for(int a=j; a<=k;a++)
+		{
+			cout<<arr[a]<<"  ";
+		}
+		cout<<"\n\n";
+	 
+}
