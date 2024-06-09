@@ -1,0 +1,163 @@
+#include <cstdlib>
+#include <time.h>
+#include <iostream>
+using namespace std;
+
+void print2D(int** a, int r, int c)
+{
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			cout << a[i][j] << " ";
+		}
+
+		cout << endl;
+	}
+}
+
+
+void print1D(int* a, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << a[i] << " ";
+	}
+}
+
+void sort_Array(int* arr, int n)
+{
+	int key, j = 0;
+
+	for (int i = 1; i < n; i++)
+	{
+		key = arr[i];
+		j = i - 1;
+
+		while (j >= 0 && arr[j] > key)
+		{
+			arr[j + 1] = arr[j];
+			j = j - 1;
+		}
+
+		arr[j + 1] = key;
+	}
+
+}
+
+void Copy(int** arr, int* array, int row, int col)
+{
+	int k = 0;
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			arr[i][j] = array[k];
+			k++;
+		}
+	}
+}
+
+int* BinarySearch(int** arr, int row, int value, int start, int end)
+{
+    int* index = new int[2];
+    index[0] = -1; // Initialize to -1 to indicate value not found
+    index[1] = -1;
+
+    if (start >= end)
+    {
+        return index;
+    }
+
+    int mid = (start + end) / 2;
+
+    if (value == arr[row][mid])
+    {
+        index[0] = row;
+        index[1] = mid;
+    }
+    else if (value < arr[row][mid])
+    {
+        return BinarySearch(arr, row, value, start, mid);
+    }
+    else
+    {
+        return BinarySearch(arr, row, value, mid + 1, end);
+    }
+
+    return index;
+}
+
+int* Binary_RowWise_Search(int** arr, int r, int c, int value)
+{
+    int* index = new int[2];
+    index[0] = -1; // Initialize to -1 to indicate value not found
+    index[1] = -1;
+
+    for (int i = 0; i < r; i++)
+    {
+        if (value >= arr[i][0] && value <= arr[i][c - 1])
+        {
+            index = BinarySearch(arr, i, value, 0, c);
+            if (index[0] != -1 && index[1] != -1)
+            {
+                return index;
+            }
+        }
+    }
+
+    return index;
+}
+
+int main()
+{
+   int row, col;
+	cout << "Enter no of rows...";
+	cin >> row;
+	cout << "Enter no of columns...";
+	cin >> col;
+
+	int** arr = new int* [row];
+
+	for (int i = 0; i < row; i++)
+	{
+		arr[i] = new int[col];
+	}
+
+	int* array = new int[row * col];
+
+	int k = 0;
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			arr[i][j] = (rand() % 1000) + 1;
+			array[k] = arr[i][j];
+			k++;
+		}
+	}
+	cout << "2D array:\n";
+	print2D(arr, row, col);
+
+	sort_Array(array, row * col);
+
+	Copy(arr, array, row, col);
+
+	cout << "Sorted 2D array:\n";
+	print2D(arr, row, col);
+
+	int val,x;
+	cout << "Enter value to Search in 2D array.";
+	cin >> val;
+	int y = 2;
+	int* index = new int[y];
+	index= Binary_RowWise_Search(arr, row, col, val);
+
+    if(index[0]==-1 && index[1]==-1)
+    cout<<"\nYour given value not found in 2D array.\n";
+    else
+	cout << "Value found at index [" << index[0] << "][" << index[1] << "]. \n";
+
+	
+}
+
