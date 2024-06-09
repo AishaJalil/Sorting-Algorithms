@@ -1,0 +1,144 @@
+#include<iostream>
+#include<cstdlib>
+#include <time.h>
+#include <ctime>
+#include <iomanip>
+using namespace std;
+
+
+
+void print(int* a, int n) {
+    for (int x = 0; x < n; x++) {
+        cout << a[x] << " ";
+    }
+}
+
+
+void Merge(int* arr, int low, int mid, int high) {
+    int size = high - low + 1;
+    int* merge = new int[size];
+
+    int i = low, j = mid + 1, k = 0;
+
+    while (i <= mid && j <= high) {
+        if (arr[i] <= arr[j]) {
+            merge[k++] = arr[i++];
+        }
+        else {
+            merge[k++] = arr[j++];
+        }
+    }
+
+    while (i <= mid) {
+        merge[k++] = arr[i++];
+    }
+
+    while (j <= high) {
+        merge[k++] = arr[j++];
+    }
+
+    for (int x = 0; x < size; x++) {
+        arr[low + x] = merge[x];
+    }
+
+    delete[] merge;
+}
+
+void MergeSort(int* arr, int low, int high) {
+    if (low < high) {
+        int mid = low + (high - low) / 2;
+        MergeSort(arr, low, mid);
+        MergeSort(arr, mid + 1, high);
+        Merge(arr, low, mid, high);
+    }
+}
+
+
+int BinarySearch(int* arr, int start, int end, int target)
+{
+
+
+    if (start <= end)
+    {
+
+        int mid = start + (end - start) / 2;
+        if (arr[mid] == target)
+        {
+
+            return mid;
+        }
+
+        if (arr[mid] > target)
+        {
+            return BinarySearch(arr, start, mid - 1, target);
+        }
+
+        return BinarySearch(arr, mid + 1, end, target);
+
+    }
+
+    return -1;
+
+}
+int InterpolationSearch(int* arr, int start, int end, int target)
+{
+    if (start <= end)
+    {
+        int ip = start + ((double)(end - start) / (arr[end] - arr[start])) * (target - arr[start]);
+
+        if (ip < start || ip > end) {
+            return -1; // Out of bounds, target cannot be in this subarray
+        }
+
+        if (arr[ip] == target)
+            return ip;
+
+        if (arr[ip] > target)
+            return InterpolationSearch(arr, start, ip - 1, target);
+
+        return InterpolationSearch(arr, ip + 1, end, target);
+    }
+    return -1; // Return -1 when target is not found
+}
+
+int main()
+{
+    const int size = 1000000;
+    const int simulation = 10;
+    srand(time(NULL));
+    int BinSearch;
+    int InterpolSearch;
+    double uniformity = 0.000000;
+    cout << "Simulation\tUniformity\tBinary Search\tInterpolation Search" << endl;
+
+    for (int i = 0; i < simulation; i++)
+    {
+        int* arr = new int[size];
+
+        for (int j = 0; j < size; j++)
+        {
+            arr[j] = rand() % 100 + 1;
+        }
+        // Array  Sorting by merge sort
+        MergeSort(arr, 0, size - 1);
+
+        clock_t start = clock();
+        //Binary search
+        BinSearch = BinarySearch(arr, 0, size - 1, rand() % 100 + 1);
+        int  end = clock();
+        double binarySearchTime = double(end - start) / double(CLOCKS_PER_SEC);
+
+       
+        start = clock();
+        //Interpolaton Search
+        InterpolSearch = InterpolationSearch(arr, 0, size - 1, rand() % 100 + 1);
+        end = clock();
+        double interpolationSearchTime = double(end - start) / double(CLOCKS_PER_SEC);
+
+        cout << i + 1 << "\t          " << uniformity << "         \t" << fixed << binarySearchTime << setprecision(5) << "sec" << "           \t" << fixed << interpolationSearchTime << setprecision(5) << "sec" << endl;
+
+        delete[] arr;
+    }
+
+    return 0;
+}
