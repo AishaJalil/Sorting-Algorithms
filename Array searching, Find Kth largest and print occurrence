@@ -1,0 +1,110 @@
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+using namespace std;
+
+void print(int * a)
+{
+	for (int i = 0; i < 500; i++)
+	{
+		cout<<a[i]<<endl;
+	}
+}
+
+int* occurence(int* a)
+{
+	int n = 11;
+	int *occur=new int [n];
+
+	for (int i = 0; i < 11; i++)
+	{
+		occur[i] = 0;
+	}
+
+
+	for (int i = 0; i < 500; i++)
+	{
+		occur[a[i]]++;
+	}
+
+	return occur;
+}
+
+int largest_Find(int k,int* a, int max, int prev_max)
+{
+	
+	// first assign any random value to k
+	if (k == 1)
+		return prev_max;
+	k--;
+	for (int i = 1; i < 500; i++)
+	{
+		if (a[i] < prev_max && a[i]>max)
+		{
+			max = a[i];
+	
+		}
+	}
+	prev_max = max;
+	max = 0;
+	largest_Find(k, a, max, prev_max);
+
+}
+
+void Search(int* a, int search_val, int replace_val)
+{
+	for (int i = 0; i < 500; i++)
+	{
+		if (a[i] == search_val)
+		{
+			a[i] = replace_val;
+		}
+	}
+}
+
+
+int main()
+{
+	int arr[500];
+
+	for (int i = 0; i < 500; i++)
+	{
+		arr[i] =( rand() % 10)+1;
+	}
+
+	print(arr);
+	int n = 10;
+	int* occur = new int[n];
+	occur=occurence(arr);
+
+	cout << "\nOccurences of elements in array are:\n";
+	for (int i = 1; i < 11; i++)
+	{
+		cout << "Occurence of " << i << " is " << occur[i] << endl;
+	}
+
+	
+	int k;
+	cout << "Enter value of k for find the kth largest element...\n ";
+	cin >>  k;
+
+	int max = 0, prev_max = 0;
+	for (int i = 0; i < 500; i++)
+	{
+		if (arr[i] > prev_max)
+			prev_max = arr[i];
+	}
+
+	max = largest_Find(k, arr, max,prev_max);
+	cout << "Kth largest value in array is :" << max << endl;
+
+	int a, b;
+	cout << "Enter value to search in array ...\n";
+	cin >> a;
+	cout << "Enter value to update the value where array element is " << a << endl;
+	cin >> b;
+	Search(arr, a, b);
+	cout << "Array after replacing value " << a << " to " << b << endl;
+
+	print(arr);
+}
